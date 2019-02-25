@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <!--使用扫描配置，对某一个包下的所有类进行扫描，找出所有使用@Controller注解的Handler控制器类-->
+    <context:component-scan base-package="controller, service"/>
+
+    <!--。。。。。。。。。。。。视图解析器用例。。。。。。。。。。。。。。。-->
+    <!--内部资源视图解析器，suffix为空,方便跟参数 url?id=xxx-->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages"/>
+        <property name="suffix" value=""/>
+    </bean>
+
+    <!--注解驱动，使用默认的映射器与适配器-->
+    <mvc:annotation-driven/>
+
+    <!--全局拦截器-->
+    <mvc:interceptors>
+        <!--登录校验-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--multipart类型解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置上传文件的最大尺寸为10MB-->
+        <property name="maxUploadSize" value="10485760"/>
+    </bean>
+
+</beans>
